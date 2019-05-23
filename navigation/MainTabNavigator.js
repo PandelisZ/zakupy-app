@@ -5,13 +5,13 @@ import { createStackNavigator, createBottomTabNavigator } from 'react-navigation
 import TabBarIcon from '../components/TabBarIcon';
 import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
-import ListScreen from '../screens/ListScreen';
+import ItemScreen from '../screens/ItemScreen';
 
-const ListStack = createStackNavigator({
-  List: ListScreen,
+const ItemStack = createStackNavigator({
+  Item: ItemScreen,
 });
 
-ListStack.navigationOptions = {
+ItemStack.navigationOptions = {
   tabBarLabel: 'All',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
@@ -54,7 +54,7 @@ SettingsStack.navigationOptions = {
 };
 
 export default createBottomTabNavigator({
-  ListStack,
+  ItemStack,
   LinksStack,
   SettingsStack,
 });
