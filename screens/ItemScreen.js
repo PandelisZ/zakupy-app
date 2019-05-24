@@ -32,6 +32,8 @@ import { addItem, deleteItem, updateItem, getAllItemsForList } from '../store/re
     this.props.navigation.setParams({
       title: this.listName
     })
+
+    this.screenFilterTodos = this.screenFilterTodos.bind(this)
   }
 
   saveItemData = (item) => {
@@ -49,7 +51,12 @@ import { addItem, deleteItem, updateItem, getAllItemsForList } from '../store/re
   }
 
   screenFilterTodos = () => {
-    const{ screen, items } = this.props;
+    let { screen, items } = this.props;
+
+    items = items.filter(function(item) {
+      return item.listId == this.listId
+    })
+
     if( screen == "Active"){
       return items.filter(function(todo) {
         return !todo.completed;
@@ -69,7 +76,7 @@ import { addItem, deleteItem, updateItem, getAllItemsForList } from '../store/re
     const { items, showNewItem, screen, deleteItem, updateItem } = this.props;
 
     let ListItm = [];
-    if(items.length > 0){
+    if(items && items.length > 0){
       let scrTodos = this.screenFilterTodos();
       ListItm = scrTodos.map( (item, index) =>
         <ListItem

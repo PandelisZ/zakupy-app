@@ -5,12 +5,12 @@ import { Input, Button } from 'native-base';
 export default class AddItem extends React.Component{
     constructor(props) {
         super(props);
-        const title = "";
+        const name = "";
         const completed = false;
         const createdAt = "";
 
         this.state = {
-            title,
+            name,
             completed,
             createdAt,
         };
@@ -33,7 +33,7 @@ export default class AddItem extends React.Component{
                  />
                 <Body>
                     <Input placeholder = "What needs to be done?"
-                        onChangeText = { (txt) => this.setStateUtil("title", txt) }
+                        onChangeText = { (txt) => this.setStateUtil("name", txt) }
                         onSubmitEditing = { () => onPress( this.state ) }
                     />
                 </Body>

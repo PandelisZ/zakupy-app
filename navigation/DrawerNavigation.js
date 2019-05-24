@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { createDrawerNavigator, SafeAreaView, DrawerItems } from 'react-navigation'
+import { createDrawerNavigator, SafeAreaView, withNavigation, NavigationActions } from 'react-navigation'
 import MainTabNavigator from './MainTabNavigator';
 import { TouchableItem } from 'react-navigation-drawer/dist/views/TouchableItem';
 import {ScrollView, Text, View, StyleSheet} from 'react-native';
@@ -38,6 +38,15 @@ class CustomDrawerContentComponent extends Component {
                             style={styles.label}
                             key={l._id}
                         onPress={() => {
+
+                            const resetAction = NavigationActions.reset({
+                                index: 0,
+                                actions: [
+                                  NavigationActions.navigate({ routeName: 'Item', listName: l.name, listId: l._id})
+                                ]
+                              })
+
+                            this.props.navigation.dispatch(resetAction)
                         }}
                         >
                             {l.name}
@@ -58,7 +67,7 @@ const ReduxDrawer = connect(
     () => {
         return {}
     },
-)(CustomDrawerContentComponent)
+)(withNavigation(CustomDrawerContentComponent))
 
 
 export default createDrawerNavigator(

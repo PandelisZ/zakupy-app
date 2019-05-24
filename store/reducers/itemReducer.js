@@ -1,3 +1,6 @@
+import api from '../../api'
+import uuidv1 from 'uuid/v1';
+
 const ADD_ITEM = 'ITEM/ITEM/ADD_ITEM';
 const UPDATE_ITEM = 'ITEM/ITEM/UPDATE_ITEM';
 const DELETE_ITEM = 'ITEM/ITEM/DELETE_ITEM';
@@ -10,6 +13,7 @@ const initialState = {
 export default function itemReducer(state = initialState, action) {
   switch (action.type) {
     case ADD_ITEM:
+        console.log(state)
       return {
         items: [
             ...state.items,
@@ -44,11 +48,18 @@ export default function itemReducer(state = initialState, action) {
 }
 
 export function addItem(item) {
-    return {
-        type: ADD_ITEM,
-        item,
-    };
+
+        api.item.create(item.listId, {
+            ...item,
+            _id: uuidv1()
+        })
+        return{
+            type: ADD_ITEM,
+            item,
+        }
 }
+
+
 
 export function updateItem(item){
     return {

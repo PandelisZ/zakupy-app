@@ -14,11 +14,11 @@ export default class listItem extends React.Component {
             checked = { item.completed }
             onPress = { () => updateItem({
               ...item,
-              completed: !item.completed
+              status: item.completed ? 'completed' : 'pending'
             }) }
             />
         <Body>
-            <Text>{ item.title }</Text>
+            <Text>{ item.name }</Text>
         </Body>
         <Button
             transparent
