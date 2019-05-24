@@ -6,23 +6,23 @@ import { updateItem } from '../store/reducers/itemReducer';
 export default class listItem extends React.Component {
   render() {
 
-    const { list, deleteItem, updateList } = this.props;
+    const { item, deleteItem, updateItem } = this.props;
 
     return (
       <ListItem>
         <CheckBox
-            checked = { list.completed }
-            onPress = { () => updateList({
-              ...list,
-              completed: !list.completed
+            checked = { item.completed }
+            onPress = { () => updateItem({
+              ...item,
+              completed: !item.completed
             }) }
             />
         <Body>
-            <Text>{ list.title }</Text>
+            <Text>{ item.title }</Text>
         </Body>
         <Button
             transparent
-            onPress = { () => deleteItem( list ) }
+            onPress = { () => deleteItem( item ) }
         >
             <Icon name = { 'trash' } />
         </Button>

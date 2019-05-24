@@ -21,13 +21,28 @@ import { addItem, deleteItem, updateItem } from '../store/reducers/itemReducer';
 
   saveItemData = (item) => {
     this.addNewItem(show = false);
-    console.log("Item is: " + item.title + " " + (item.completed ? "completed!" : "not completed!"));
+    this.props.addItem(item);
   }
 
   addNewItem = (show) => {
     this.setState({
       newItem: show
     });
+  }
+
+  screenFilterTodos = () => {
+    const{ screen, items } = this.props;
+    if( screen == "Active"){
+      return items.filter(function(todo) {
+        return !todo.completed;
+      })
+    }else if(screen == "Completed" ){
+      return items.filter(function(todo) {
+        return todo.completed;
+      })
+    }else{
+      return items;
+    }
   }
 
   render() {
@@ -37,7 +52,8 @@ import { addItem, deleteItem, updateItem } from '../store/reducers/itemReducer';
 
     let ListItm = [];
     if(items.length > 0){
-      ListItm = items.map( (item, index) =>
+      let scrTodos = this.screenFilterTodos();
+      ListItm = scrTodos.map( (item, index) =>
         <ListItem
           key={ index }
           item={ item }
