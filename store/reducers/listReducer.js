@@ -1,14 +1,17 @@
+
+
 const ADD_LIST = 'LIST/LIST/ADD_LIST';
 const UPDATE_LIST = 'LIST/LIST/UPDATE_LIST';
 const DELETE_LIST = 'LIST/LIST/DELETE_LIST';
 
 const initialState = {
     lists: [
-        'wow'
+
     ],
 };
 
 export default function listReducer(state = initialState, action) {
+
   switch (action.type) {
     case ADD_LIST:
       return {

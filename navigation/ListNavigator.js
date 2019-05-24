@@ -3,9 +3,10 @@ import { Platform } from 'react-native';
 import { createStackNavigator, HeaderBackButton } from 'react-navigation';
 
 import NewListScreen from '../screens/NewListScreen';
+import MainTabNavigator from './MainTabNavigator';
 
 const ListStack = createStackNavigator({
-  Lists: {
+  NewList: {
     screen: NewListScreen,
     navigationOptions: (({navigation}) => ({
       tabBarLabel: 'New List',

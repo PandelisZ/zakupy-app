@@ -5,7 +5,7 @@ import AddItem from '../components/AddItem'
 
 import ListItem from '../components/ListItem';
 import { connect } from 'react-redux';
-import { addItem, deleteItem, updateItem } from '../store/reducers/itemReducer';
+import { addItem, deleteItem, updateItem, getAllItemsForList } from '../store/reducers/itemReducer';
 
 
  class ItemsScreen extends React.Component {
@@ -17,11 +17,29 @@ import { addItem, deleteItem, updateItem } from '../store/reducers/itemReducer';
     this.state = {
       newItem: false,
     };
+
+    this.listId = this.props.navigation.getParam('listId')
+    this.listName = this.props.navigation.getParam('listName')
+
+  }
+
+  onComponentDidMount() {
+
+    this.listId = this.props.navigation.getParam('listId')
+    this.listName = this.props.navigation.getParam('listName')
+
+    console.log(this.listId)
+    this.props.navigation.setParams({
+      title: this.listName
+    })
   }
 
   saveItemData = (item) => {
     this.addNewItem(show = false);
-    this.props.addItem(item);
+    this.props.addItem({
+     ...item,
+     listId: this.listId
+    });
   }
 
   addNewItem = (show) => {

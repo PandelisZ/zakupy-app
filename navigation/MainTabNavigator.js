@@ -3,9 +3,9 @@ import { Platform } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
 import TabBarIcon from '../components/TabBarIcon';
-import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import ItemScreen from '../screens/ItemScreen';
+import NewListScreen from '../screens/NewListScreen';
 
 const ItemStack = createStackNavigator({
   Item: ItemScreen,
@@ -26,11 +26,11 @@ ItemStack.navigationOptions = {
 };
 
 const LinksStack = createStackNavigator({
-  Links: LinksScreen,
+  Completed: ItemScreen,
 });
 
 LinksStack.navigationOptions = {
-  tabBarLabel: 'Links',
+  tabBarLabel: 'Done',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -53,8 +53,34 @@ SettingsStack.navigationOptions = {
   ),
 };
 
+const NewListStack = createStackNavigator({
+  NewList: {
+    screen: NewListScreen,
+    navigationOptions: (({navigation}) => ({
+      tabBarLabel: 'New List',
+      headerLeft: Platform.OS === 'ios' ? <HeaderBackButton onPress={() => navigation.goBack(null)} /> : null,
+      tabBarIcon: ({ focused }) => (
+        <TabBarIcon
+          focused={focused}
+          name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
+        />
+      ),
+    })),
+  }
+});
+
+NewListStack.navigationOptions = {
+  tabBarLabel: 'New List',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
+    />
+  ),
+}
+
 export default createBottomTabNavigator({
   ItemStack,
   LinksStack,
-  SettingsStack,
+  NewListStack
 });
