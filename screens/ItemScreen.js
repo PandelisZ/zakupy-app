@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, Header, Title, Content, Body, Text, Icon, List } from 'native-base';
 import AddItemButton from '../components/AddItemButton';
 import AddItem from '../components/AddItem'
+import RNShake from 'react-native-shake';
 
 import ListItem from '../components/ListItem';
 import { connect } from 'react-redux';
@@ -16,11 +17,22 @@ import { addItem, deleteItem, updateItem, getAllItemsForList } from '../store/re
     super(props);
     this.state = {
       newItem: false,
+      debug: true
     };
 
     this.listId = this.props.navigation.getParam('listId')
     this.listName = this.props.navigation.getParam('listName')
 
+  }
+
+  componentWillUnmount() {
+    RNShake.removeEventListener('ShakeEvent');
+  }
+
+  componentWillMount() {
+    RNShake.addEventListener('ShakeEvent', () => {
+      this.setState({debug: true})
+    });
   }
 
   onComponentDidMount() {
@@ -53,15 +65,17 @@ import { addItem, deleteItem, updateItem, getAllItemsForList } from '../store/re
   screenFilterTodos = () => {
     let { screen, items } = this.props;
 
-    items = items.filter(function(item) {
+    items = items.filter((item) => {
       return item.listId == this.listId
     })
 
-    if( screen == "Active"){
+    console.log({screen})
+
+    if( screen == "All"){
       return items.filter(function(todo) {
         return !todo.completed;
       })
-    }else if(screen == "Completed" ){
+    }else if(screen == "Done" ){
       return items.filter(function(todo) {
         return todo.completed;
       })
@@ -100,6 +114,8 @@ import { addItem, deleteItem, updateItem, getAllItemsForList } from '../store/re
                     onCancel={ this.addNewItem }
                   />
                 }
+
+              {this.state.debug && <Text>{this.listId}</Text>}
           </Content>
 
 

@@ -14,7 +14,7 @@ export default class listItem extends React.Component {
             checked = { item.completed }
             onPress = { () => updateItem({
               ...item,
-              status: item.completed ? 'completed' : 'pending'
+              status: item.completed ? 'done' : 'empty'
             }) }
             />
         <Body>

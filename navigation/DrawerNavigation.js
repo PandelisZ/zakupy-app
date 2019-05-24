@@ -40,9 +40,10 @@ class CustomDrawerContentComponent extends Component {
                         onPress={() => {
 
                             const resetAction = NavigationActions.reset({
+                                key: null,
                                 index: 0,
                                 actions: [
-                                  NavigationActions.navigate({ routeName: 'Item', listName: l.name, listId: l._id})
+                                  NavigationActions.navigate({ routeName: 'Stack' })
                                 ]
                               })
 
