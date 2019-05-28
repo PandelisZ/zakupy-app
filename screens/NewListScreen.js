@@ -8,7 +8,9 @@ import api from '../api'
 
 
 import { connect } from 'react-redux';
-import { addList } from '../store/reducers/listReducer';
+import { addList, resetList } from '../store/reducers/listReducer';
+import { resetItems } from '../store/reducers/itemReducer';
+import { View } from 'react-native';
 
 
 class NewListScreen extends Component {
@@ -20,10 +22,12 @@ class NewListScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      listName: null
+      listName: null,
+      isDebug: false
     }
 
     this.createList = this.createList.bind(this)
+    this.resetRedux = this.resetRedux.bind(this)
   }
 
   static navigationOptions = {
@@ -44,10 +48,15 @@ class NewListScreen extends Component {
     }
   }
 
+  resetRedux() {
+    this.props.resetList()
+    this.props.resetItems()
+  }
+
   render() {
     return (
       <Container>
-        <Content>
+        <Content onPress={this.setDebug}>
           <Form>
             <Item fixedLabel>
               <Label>List Name</Label>
@@ -57,6 +66,10 @@ class NewListScreen extends Component {
           <Button block primary onPress={this.createList}>
             <Text>Create</Text>
           </Button>
+          <View style={{paddingVertical: 20}} />
+            <Button block danger onPress={this.resetRedux}>
+              <Text>DEBUG: Delete cache</Text>
+            </Button>
         </Content>
       </Container>
     );
@@ -66,7 +79,9 @@ class NewListScreen extends Component {
 
 function mapDispatchToProps (dispatch) {
   return {
-    addList: (list) => dispatch(addList(list))
+    addList: (list) => dispatch(addList(list)),
+    resetList: (list) => dispatch(resetList()),
+    resetItems: (item) => dispatch(resetItems())
   }
 }
 

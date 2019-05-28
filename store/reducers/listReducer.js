@@ -3,6 +3,7 @@
 const ADD_LIST = 'LIST/LIST/ADD_LIST';
 const UPDATE_LIST = 'LIST/LIST/UPDATE_LIST';
 const DELETE_LIST = 'LIST/LIST/DELETE_LIST';
+const RESET_LIST = 'LIST/LIST/RESET_LIST'
 
 const initialState = {
     lists: [
@@ -36,6 +37,8 @@ export default function listReducer(state = initialState, action) {
                 return list.title != action.list.title;
             })
         }
+    case RESET_LIST:
+        return initialState
     default:
       return state;
   }
@@ -61,3 +64,10 @@ export function deleteList(list){
         list,
     }
 }
+
+export function resetList(){
+    return {
+        type: RESET_LIST
+    }
+}
+

@@ -5,6 +5,7 @@ const ADD_ITEM = 'ITEM/ITEM/ADD_ITEM';
 const UPDATE_ITEM = 'ITEM/ITEM/UPDATE_ITEM';
 const DELETE_ITEM = 'ITEM/ITEM/DELETE_ITEM';
 const GET_ALL_ITEMS = 'LIST/ITEM/GET_ALL_ITEMS';
+const RESET_ITEMS = 'ITEM/ITEM/RESET_ITEMS';
 
 const initialState = {
     items: [],
@@ -41,6 +42,8 @@ export default function itemReducer(state = initialState, action) {
                 return item.listId === action.listId
             })
         }
+    case RESET_ITEMS:
+        return initialState
     default:
       return state;
   }
@@ -78,5 +81,11 @@ export function getAllItemsForList(listId){
     return {
         type: GET_ALL_ITEMS,
         listId,
+    }
+}
+
+export function resetItems(){
+    return {
+        type: RESET_ITEMS
     }
 }
