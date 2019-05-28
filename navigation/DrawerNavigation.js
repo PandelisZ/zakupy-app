@@ -6,6 +6,9 @@ import {ScrollView, Text, View, StyleSheet} from 'react-native';
 
 import { connect } from 'react-redux';
 import ListStack from './ListNavigator';
+import Colors from '../constants/Colors';
+import { setCurrentList } from '../store/reducers/listReducer';
+import { Button } from 'native-base';
 
 
 // Manifest of possible screens
@@ -25,36 +28,57 @@ class CustomDrawerContentComponent extends Component {
 
     constructor(props) {
         super(props)
+
+        this.rehydrateListView = this.rehydrateListView.bind(this)
+        this.newList = this.newList.bind(this)
+    }
+
+
+    rehydrateListView(list) {
+        this.props.setCurrentList(list)
+
+        this.props.navigation.closeDrawer();
+        this.props.navigation.navigate('Item');
+    }
+
+    newList() {
+        this.props.navigation.closeDrawer();
+        this.props.navigation.navigate('NewList');
     }
 
     render() {
         return (
         <ScrollView>
             <SafeAreaView style={styles.container} forceInset={{ top: 'always', horizontal: 'never' }}>
-                {this.props.lists.map(l => {
-                    console.log(l)
+                    <Text style={styles.label}>
+                        My Lists
+                    </Text>
+                    <View
+                            style={{
+                            borderBottomColor: '#ccc',
+                            borderBottomWidth: 1,
+                            }}
+                        />
+                {this.props.lists.map((l) => {
                     return (
                         <Text
-                            style={styles.label}
+                            style={styles.list}
                             key={l._id}
-                        onPress={() => {
-
-                            const resetAction = NavigationActions.reset({
-                                key: null,
-                                index: 0,
-                                actions: [
-                                  NavigationActions.navigate({ routeName: 'Stack' })
-                                ]
-                              })
-
-                            this.props.navigation.dispatch(resetAction)
-                        }}
+                            onPress={() => this.rehydrateListView(l)}
                         >
                             {l.name}
                         </Text>
                     )
                 })}
-                {this.props.lists.length === 0 && <Text>You do not currently have any shopping lists</Text>}
+                {this.props.lists.length === 0 &&
+                    <View style={styles.list}>
+                        <Text>You do not currently have any shopping lists</Text>
+                        <View style={styles.list}></View>
+                        <Button block primary onPress={this.newList}>
+                            <Text style={{color: '#fff'}}>New List</Text>
+                        </Button>
+                    </View>
+                }
             </SafeAreaView>
         </ScrollView>
         )
@@ -65,8 +89,10 @@ const ReduxDrawer = connect(
     (state) => {
         return { lists: state.listReducer.lists }
     },
-    () => {
-        return {}
+    (dispatch) => {
+        return {
+            setCurrentList: (list) => dispatch(setCurrentList(list))
+        }
     },
 )(withNavigation(CustomDrawerContentComponent))
 
@@ -106,5 +132,8 @@ const styles = StyleSheet.create({
       label: {
         margin: 16,
         fontWeight: 'bold',
+      },
+      list: {
+        margin: 16,
       },
 });

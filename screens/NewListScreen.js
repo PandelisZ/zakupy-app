@@ -22,8 +22,7 @@ class NewListScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      listName: null,
-      isDebug: false
+      listName: null
     }
 
     this.createList = this.createList.bind(this)
@@ -42,15 +41,16 @@ class NewListScreen extends Component {
         name: listName,
         _id: uuidv1()
       })
-      await this.props.addList(listResponse.data.data)
-
-      await this.props.navigation.push('Item', {listName: listResponse.data.data.name, listId: listResponse.data.data._id})
+      const listAdded = await this.props.addList(listResponse.data.data)
+      this.setState({listName: null})
+      await this.props.navigation.navigate('Item', {listName: listResponse.data.data.name, listId: listResponse.data.data._id})
     }
   }
 
   resetRedux() {
     this.props.resetList()
     this.props.resetItems()
+    this.setState({listName: null})
   }
 
   render() {

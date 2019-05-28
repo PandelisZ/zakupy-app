@@ -1,14 +1,13 @@
 
-
 const ADD_LIST = 'LIST/LIST/ADD_LIST';
 const UPDATE_LIST = 'LIST/LIST/UPDATE_LIST';
 const DELETE_LIST = 'LIST/LIST/DELETE_LIST';
-const RESET_LIST = 'LIST/LIST/RESET_LIST'
+const RESET_LIST = 'LIST/LIST/RESET_LIST';
+const SET_CURRENT_LIST = 'LIST/LIST/SET_CURRENT_LIST';
 
 const initialState = {
-    lists: [
-
-    ],
+    lists: [],
+    currentList: undefined
 };
 
 export default function listReducer(state = initialState, action) {
@@ -20,7 +19,13 @@ export default function listReducer(state = initialState, action) {
             ...state.lists,
             action.list
         ],
+        currentList: action.list
       };
+    case SET_CURRENT_LIST:
+        return {
+            ...state,
+            currentList: action.list
+        };
     case UPDATE_LIST:
         let lists = [...state.lists];
         let indexOfUpdate = lists.findIndex((list) =>{
@@ -33,6 +38,7 @@ export default function listReducer(state = initialState, action) {
         }
     case DELETE_LIST:
         return {
+            ...state,
             lists: state.lists.filter(function(list) {
                 return list.title != action.list.title;
             })
@@ -68,6 +74,13 @@ export function deleteList(list){
 export function resetList(){
     return {
         type: RESET_LIST
+    }
+}
+
+export function setCurrentList(list){
+    return {
+        type: SET_CURRENT_LIST,
+        list
     }
 }
 

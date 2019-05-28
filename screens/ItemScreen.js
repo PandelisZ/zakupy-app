@@ -7,6 +7,7 @@ import RNShake from 'react-native-shake';
 import ListItem from '../components/ListItem';
 import { connect } from 'react-redux';
 import { addItem, deleteItem, updateItem, getAllItemsForList } from '../store/reducers/itemReducer';
+import listReducer from '../store/reducers/listReducer';
 
 
  class ItemsScreen extends React.Component {
@@ -32,40 +33,55 @@ import { addItem, deleteItem, updateItem, getAllItemsForList } from '../store/re
       debug: true
     };
 
-    this.listId = this.props.navigation.getParam('listId')
-    this.listName = this.props.navigation.getParam('listName')
+
 
     this.props.navigation.setParams({
       title: this.listName
     })
 
+    if (!this.props.currentList) {
+      this.props.navigation.navigate({routeName: 'NewList'})
+    }
+
+    this.screenFilterTodos = this.screenFilterTodos.bind(this)
+    this.componentWillFocus = this.componentWillFocus.bind(this)
   }
 
   componentWillUnmount() {
     RNShake.removeEventListener('ShakeEvent');
+    this.subs.forEach(sub => sub.remove());
   }
 
   componentWillMount() {
     RNShake.addEventListener('ShakeEvent', () => {
       this.setState({debug: true})
     });
+
+    this.subs = [
+      this.props.navigation.addListener('willFocus', (payload) => this.componentWillFocus(payload)),
+    ];
   }
 
-  onComponentDidMount() {
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.currentList) {
+      if (prevProps.currentList._id !== this.props.currentList._id) {
+        this.componentWillFocus()
+      }
+    }
+  }
+
+  componentWillFocus(payload) {
 
     const {setParams} = this.props.navigation;
-    setParams({ title: titleText })
 
-    this.listId = this.props.navigation.getParam('listId')
-    this.listName = this.props.navigation.getParam('listName')
+    if (this.props.currentList) {
+      setParams({
+        title: this.props.currentList.name
+      })
+    }
 
-    console.log(this.listId)
-    setParams({
-      title: 'different name'
-    })
-
-    this.screenFilterTodos = this.screenFilterTodos.bind(this)
   }
+
 
   saveItemData = (item) => {
     this.addNewItem(show = false);
@@ -87,8 +103,6 @@ import { addItem, deleteItem, updateItem, getAllItemsForList } from '../store/re
     items = items.filter((item) => {
       return item.listId == this.listId
     })
-
-    console.log({screen})
 
     if( screen == "All"){
       return items.filter(function(todo) {
@@ -146,7 +160,8 @@ import { addItem, deleteItem, updateItem, getAllItemsForList } from '../store/re
 
 function mapStateToProps (state) {
   return {
-      items: state.itemReducer.items
+      items: state.itemReducer.items,
+      currentList: state.listReducer.currentList
   }
 }
 
