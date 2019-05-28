@@ -25,16 +25,16 @@ ItemStack.navigationOptions = {
   ),
 };
 
-const LinksStack = createStackNavigator({
-  Completed: ItemScreen,
+const CartStack = createStackNavigator({
+  Cart: ItemScreen,
 });
 
-LinksStack.navigationOptions = {
-  tabBarLabel: 'Done',
+CartStack.navigationOptions = {
+  tabBarLabel: 'Cart',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'}
+      name={Platform.OS === 'ios' ? 'ios-cart' : 'md-cart'}
     />
   ),
 };
@@ -81,6 +81,6 @@ NewListStack.navigationOptions = {
 
 export default createBottomTabNavigator({
   ItemStack,
-  LinksStack,
+  CartStack,
   NewListStack
 });

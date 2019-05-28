@@ -74,6 +74,8 @@ import listReducer from '../store/reducers/listReducer';
 
     const {setParams} = this.props.navigation;
 
+    this.routeName = payload.state.routeName
+
     if (this.props.currentList) {
       setParams({
         title: this.props.currentList.name
@@ -87,7 +89,7 @@ import listReducer from '../store/reducers/listReducer';
     this.addNewItem(show = false);
     this.props.addItem({
      ...item,
-     listId: this.listId
+     listId: this.props.currentList._id
     });
   }
 
@@ -98,17 +100,17 @@ import listReducer from '../store/reducers/listReducer';
   }
 
   screenFilterTodos = () => {
-    let { screen, items } = this.props;
+    let { items } = this.props;
 
     items = items.filter((item) => {
-      return item.listId == this.listId
+      return item.listId == this.props.currentList._id
     })
 
-    if( screen == "All"){
+    if(this.routeName == 'Cart'){
       return items.filter(function(todo) {
         return !todo.completed;
       })
-    }else if(screen == "Done" ){
+    }else if(this.routeName == 'Cart' ){
       return items.filter(function(todo) {
         return todo.completed;
       })
