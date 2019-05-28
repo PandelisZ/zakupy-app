@@ -10,9 +10,21 @@ import { addItem, deleteItem, updateItem, getAllItemsForList } from '../store/re
 
 
  class ItemsScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Shopping List',
-  }
+
+  static navigationOptions = ({ navigation }) => {
+    const {state} = navigation;
+
+    let title = 'Shopping List'
+
+    if(state.params && state.params.title) {
+      title = state.params.title
+    }
+
+    return {
+      title: `${title}`,
+    };
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -22,6 +34,10 @@ import { addItem, deleteItem, updateItem, getAllItemsForList } from '../store/re
 
     this.listId = this.props.navigation.getParam('listId')
     this.listName = this.props.navigation.getParam('listName')
+
+    this.props.navigation.setParams({
+      title: this.listName
+    })
 
   }
 
@@ -37,12 +53,15 @@ import { addItem, deleteItem, updateItem, getAllItemsForList } from '../store/re
 
   onComponentDidMount() {
 
+    const {setParams} = this.props.navigation;
+    setParams({ title: titleText })
+
     this.listId = this.props.navigation.getParam('listId')
     this.listName = this.props.navigation.getParam('listName')
 
     console.log(this.listId)
-    this.props.navigation.setParams({
-      title: this.listName
+    setParams({
+      title: 'different name'
     })
 
     this.screenFilterTodos = this.screenFilterTodos.bind(this)
