@@ -23,7 +23,12 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
-    }
+      "supportsTablet": true,
+      "bundleIdentifier": "me.pandelis.zakupy"
+    },
+    "android": {
+      "package": "me.pandelis.zakupy"
+    },
+    "description": ""
   }
 }

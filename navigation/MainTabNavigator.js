@@ -58,7 +58,6 @@ const NewListStack = createStackNavigator({
     screen: NewListScreen,
     navigationOptions: (({navigation}) => ({
       tabBarLabel: 'New List',
-      headerLeft: Platform.OS === 'ios' ? <HeaderBackButton onPress={() => navigation.goBack(null)} /> : null,
       tabBarIcon: ({ focused }) => (
         <TabBarIcon
           focused={focused}
