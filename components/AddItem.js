@@ -6,12 +6,12 @@ export default class AddItem extends React.Component{
     constructor(props) {
         super(props);
         const name = "";
-        const completed = false;
+        const status = 'empty';
         const createdAt = "";
 
         this.state = {
             name,
-            completed,
+            status,
             createdAt,
         };
     }
@@ -23,16 +23,16 @@ export default class AddItem extends React.Component{
     }
 
     render(){
-        const { completed, title } = this.state;
+        const { status, title } = this.state;
         const { onPress, onCancel } = this.props;
         return(
             <ListItem>
                 <CheckBox
-                    checked = { completed }
-                    onPress = { () => this.setStateUtil("completed", !completed) }
+                    checked = { status === 'checked' }
+                    onPress = { () => this.setStateUtil("status", status === 'checked' ? 'empty' : 'checked') }
                  />
                 <Body>
-                    <Input placeholder = "What needs to be done?"
+                    <Input placeholder = "What do you need to buy?"
                         onChangeText = { (txt) => this.setStateUtil("name", txt) }
                         onSubmitEditing = { () => onPress( this.state ) }
                     />

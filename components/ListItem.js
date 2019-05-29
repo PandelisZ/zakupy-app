@@ -11,10 +11,10 @@ export default class listItem extends React.Component {
     return (
       <ListItem>
         <CheckBox
-            checked = { item.completed }
+            checked = { item.status === 'done' }
             onPress = { () => updateItem({
               ...item,
-              status: item.completed ? 'done' : 'empty'
+              status: item.status === 'done' ? 'empty' : 'done'
             }) }
             />
         <Body>

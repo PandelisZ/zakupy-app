@@ -30,9 +30,11 @@ import listReducer from '../store/reducers/listReducer';
     super(props);
     this.state = {
       newItem: false,
-      debug: true
+      debug: false
     };
 
+
+    this.routeName = 'Item'
 
 
     this.props.navigation.setParams({
@@ -45,6 +47,7 @@ import listReducer from '../store/reducers/listReducer';
 
     this.screenFilterTodos = this.screenFilterTodos.bind(this)
     this.componentWillFocus = this.componentWillFocus.bind(this)
+    this.toggleDebugState = this.toggleDebugState.bind(this)
   }
 
   componentWillUnmount() {
@@ -52,10 +55,12 @@ import listReducer from '../store/reducers/listReducer';
     this.subs.forEach(sub => sub.remove());
   }
 
+  toggleDebugState() {
+    this.setState({debug: !this.state.debug})
+  }
+
   componentWillMount() {
-    RNShake.addEventListener('ShakeEvent', () => {
-      this.setState({debug: true})
-    });
+    RNShake.addEventListener('ShakeEvent', this.toggleDebugState);
 
     this.subs = [
       this.props.navigation.addListener('willFocus', (payload) => this.componentWillFocus(payload)),
@@ -74,7 +79,11 @@ import listReducer from '../store/reducers/listReducer';
 
     const {setParams} = this.props.navigation;
 
-    this.routeName = payload.state.routeName
+    if (payload) {
+      this.routeName = payload.state.routeName
+    } else {
+      this.routeName = 'Item'
+    }
 
     if (this.props.currentList) {
       setParams({
@@ -100,19 +109,27 @@ import listReducer from '../store/reducers/listReducer';
   }
 
   screenFilterTodos = () => {
-    let { items } = this.props;
+    let { items, currentList } = this.props;
 
-    items = items.filter((item) => {
-      return item.listId == this.props.currentList._id
-    })
+    if (!currentList) {
+      return []
+    }
 
-    if(this.routeName == 'Cart'){
-      return items.filter(function(todo) {
-        return !todo.completed;
+    if(items[currentList._id]) {
+      items = items[currentList._id]
+    } else {
+      return []
+    }
+
+    console.log(this.routeName)
+
+    if(this.routeName == 'Item'){
+      return items.filter(function(item) {
+        return item.status === 'empty';
       })
     }else if(this.routeName == 'Cart' ){
-      return items.filter(function(todo) {
-        return todo.completed;
+      return items.filter(function(item) {
+        return item.status === 'done'
       })
     }else{
       return items;
@@ -122,10 +139,12 @@ import listReducer from '../store/reducers/listReducer';
   render() {
     const { newItem } = this.state;
 
-    const { items, showNewItem, screen, deleteItem, updateItem } = this.props;
+
+
+    const {items, currentList, deleteItem, updateItem } = this.props;
 
     let ListItm = [];
-    if(items && items.length > 0){
+    if(items && currentList && currentList._id && items[currentList._id] && items[currentList._id].length > 0){
       let scrTodos = this.screenFilterTodos();
       ListItm = scrTodos.map( (item, index) =>
         <ListItem
@@ -150,7 +169,7 @@ import listReducer from '../store/reducers/listReducer';
                   />
                 }
 
-              {this.state.debug && <Text>{this.listId}</Text>}
+              {this.state.debug && <Text style={{margin: 10, alignContent: "center"}}>{this.props.currentList._id}</Text>}
           </Content>
 
 
@@ -162,7 +181,7 @@ import listReducer from '../store/reducers/listReducer';
 
 function mapStateToProps (state) {
   return {
-      items: state.itemReducer.items,
+      items: state.itemReducer,
       currentList: state.listReducer.currentList
   }
 }

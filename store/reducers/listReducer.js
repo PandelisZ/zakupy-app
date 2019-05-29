@@ -7,7 +7,9 @@ const SET_CURRENT_LIST = 'LIST/LIST/SET_CURRENT_LIST';
 
 const initialState = {
     lists: [],
-    currentList: undefined
+    currentList: {
+        _id: undefined
+    }
 };
 
 export default function listReducer(state = initialState, action) {
