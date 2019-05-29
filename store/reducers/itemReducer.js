@@ -10,7 +10,7 @@ const REQUEST_ITEMS = 'LIST/ITEM/REQUEST_ITEMS';
 const RECEIVE_ITEMS = 'LIST/ITEM/RECEIVE_ITEMS';
 
 const initialState = {
-    itemsByList: {}
+    isFetching: false
 };
 
 export default function itemReducer(state = initialState, action) {
@@ -54,10 +54,38 @@ export default function itemReducer(state = initialState, action) {
         return state[action.item.listId]
     case RESET_ITEMS:
         return initialState
+    case REQUEST_ITEMS:
+    case RECEIVE_ITEMS:
+      return {
+        ...state,
+        [action.listId]: executeItemsRequest(state, action).items
+      }
     default:
       return state;
   }
 }
+
+function executeItemsRequest(
+    state = {
+      isFetching: false,
+      items: []
+    },
+    action
+  ) {
+    switch (action.type) {
+      case REQUEST_ITEMS:
+        return Object.assign({}, state, {
+          isFetching: true,
+        })
+      case RECEIVE_ITEMS:
+        return Object.assign({}, state, {
+          isFetching: false,
+          items: action.items,
+        })
+      default:
+        return state
+    }
+  }
 
 export function addItem(item) {
 
@@ -79,27 +107,33 @@ export function requestsItemsFromApi(listId){
     }
 }
 
-export function receiveItemsFromApi(items) {
+export function receiveItemsFromApi(listId, items) {
     return {
         type: RECEIVE_ITEMS,
-        items
+        items: items.map(i => {
+            return {
+                ...i,
+                listId
+            }
+        }),
+        listId,
     }
 }
 
 function fetchItems(listId) {
-    return (dispatch) => {
+    return function (dispatch) {
         dispatch(requestsItemsFromApi(listId))
         return api.list.read(listId).then((response) => {
-            dispatch(recieveItemsFromApi(response.data))
+            dispatch(receiveItemsFromApi(listId, response.data.data.items))
         })
     }
 }
 
 function shouldFetchItems(state, listId) {
-    const items = state.items.filter(l => l.listId === listId)
+    const items = state[listId]
     if (!items) {
         return true
-    } else if (state.items.isFetching) {
+    } else if (state.isFetching) {
         return false
     }
 }

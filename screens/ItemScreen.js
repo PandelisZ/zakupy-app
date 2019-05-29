@@ -6,7 +6,7 @@ import RNShake from 'react-native-shake';
 
 import ListItem from '../components/ListItem';
 import { connect } from 'react-redux';
-import { addItem, deleteItem, updateItem, getAllItemsForList } from '../store/reducers/itemReducer';
+import { addItem, deleteItem, updateItem, getAllItemsForList, fetchItemsIfNeeded } from '../store/reducers/itemReducer';
 import listReducer from '../store/reducers/listReducer';
 
 
@@ -43,6 +43,8 @@ import listReducer from '../store/reducers/listReducer';
 
     if (!this.props.currentList) {
       this.props.navigation.navigate({routeName: 'NewList'})
+    } else {
+      this.props.fetchItemsIfNeeded(this.props.currentList._id)
     }
 
     this.screenFilterTodos = this.screenFilterTodos.bind(this)
@@ -121,8 +123,6 @@ import listReducer from '../store/reducers/listReducer';
       return []
     }
 
-    console.log(this.routeName)
-
     if(this.routeName == 'Item'){
       return items.filter(function(item) {
         return item.status === 'empty';
@@ -188,6 +188,7 @@ function mapStateToProps (state) {
 
 function mapDispatchToProps (dispatch) {
   return {
+    fetchItemsIfNeeded: (listId) => dispatch(fetchItemsIfNeeded(listId)),
     addItem: (item) => dispatch(addItem(item)),
     deleteItem: (item) => dispatch(deleteItem(item)),
     updateItem: (item) => dispatch(updateItem(item)),
